@@ -16,12 +16,17 @@ app.get("/", (req, res) => {
 
 app.post("/chat", async (req, res) => {
   try {
-    const userMessage = req.body.message;
+    // Log the full incoming request body for debugging
+    console.log("Incoming body:", req.body);
+
+    // Accept both { message: "..." } and raw string payloads
+    let userMessage = req.body?.message || req.body;
+    if (typeof userMessage !== "string") userMessage = "";
+
     if (!userMessage) {
       return res.status(400).json({ reply: "⚠️ Please enter a message." });
     }
 
-    // Static responses first
     if (userMessage.toLowerCase().includes("admission")) {
       return res.json({ reply: "Admissions at VIET are through AP EAMCET/ECET. Visit viet.ac.in for details." });
     }
@@ -29,7 +34,7 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Our Placement Cell works with companies like TCS, Infosys, Wipro." });
     }
 
-    // External fetch logic
+    // External API fallback for other queries
     try {
       const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&api_key=${SERPAPI_KEY}`;
       const response = await fetch(url);
