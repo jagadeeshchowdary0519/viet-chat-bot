@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const fetch = require("node-fetch");  // Import node-fetch for fetch support in Node.js
 
 const app = express();
 app.use(bodyParser.json());
@@ -49,7 +48,5 @@ app.post("/chat", async (req, res) => {
 
   res.json({ reply });
 });
+
 app.listen(5000, () => console.log("✅ Backend running on http://localhost:5000"));
-
-
-
