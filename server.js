@@ -1,63 +1,52 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const path = require('path');
-const fetch = require('node-fetch'); // use node-fetch or your preferred fetch lib
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(cors());
 
-// Serve static files for assets like CSS/JS
-app.use(express.static(__dirname));
+const SERPAPI_KEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d";
 
-// Serve demo.html at root URL
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'demo.html'));
-});
-
-// Chat API endpoint
-app.post('/chat', async (req, res) => {
+app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
   let reply = "";
 
-  try {
-    if (!userMessage) {
-      return res.status(400).json({ error: "Message is required" });
-    }
-
-    // Basic keyword responses
-    if (userMessage.toLowerCase().includes("admission")) {
-      reply = "Admissions at VIET are through AP EAMCET/ECET. Visit viet.ac.in for details.";
-    } else if (userMessage.toLowerCase().includes("placements")) {
-      reply = "Our Placement Cell works with companies like TCS, Infosys, Wipro.";
-    } else {
-      // Example of external API call with SerpAPI - replace your API key below
-      const SERPAPIKEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d"; 
-      const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&apikey=${SERPAPIKEY}`;
+  if (userMessage.toLowerCase().includes("admission")) {
+    reply = "Admissions at VIET are through AP EAMCET/ECET. Visit viet.ac.in for details.";
+  } else if (userMessage.toLowerCase().includes("placements")) {
+    reply = "Our Placement Cell works with companies like TCS, Infosys, Wipro.";
+  } else {
+    try {
+      const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&api_key=${SERPAPI_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
 
-      // Simple parsing to reply with answer box or snippet
+      console.log("🔍 Full API Response:", JSON.stringify(data, null, 2));
+
       if (data.answer_box && data.answer_box.answer) {
         reply = data.answer_box.answer;
       } else if (data.organic_results && data.organic_results.length > 0) {
         reply = data.organic_results[0].snippet;
+      } else if (data.error) {
+        reply = "⚠️ SerpAPI Error: " + data.error;
       } else {
-        reply = "I couldn't find an answer for that.";
+        const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(userMessage)}`;
+        const wikiRes = await fetch(wikiUrl);
+        const wikiData = await wikiRes.json();
+        if (wikiData.extract) {
+          reply = wikiData.extract;
+        } else {
+          reply = "I couldn't find an answer. Please try again!";
+        }
       }
+    } catch (err) {
+      console.error("❌ Fetch failed:", err);
+      reply = "⚠️ Error fetching from Google Search.";
     }
-
-    res.json({ reply });
-  } catch (err) {
-    console.error("Chat error:", err);
-    res.status(500).json({ error: "Backend error" });
   }
+
+  res.json({ reply });
 });
 
-// Start server on port 5000
-app.listen(5000, () => {
-  console.log("Backend running on http://localhost:5000");
-});
-
+app.listen(5000, () => console.log("✅ Backend running on http://localhost:5000"));
