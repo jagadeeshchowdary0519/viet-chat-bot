@@ -31,71 +31,13 @@
       box-sizing: border-box;
       z-index: 2;
     }
-    .sidebar h2 {
-      color: #ffffff;
-      font-size: 1.5rem;
-      margin: 0 0 16px;
-      letter-spacing: 1px;
-    }
-    .sidebar .newchat-btn {
-      display: flex;
-      align-items: center;
-      background: #343541;
-      border: none;
-      color: #ececf1;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      cursor: pointer;
-      gap: 8px;
-      font-size: 1rem;
-      transition: background .18s;
-    }
-    .sidebar .newchat-btn:hover {
-      background: #3f4049;
-    }
-    .sidebar .history {
-      width: 100%;
-      flex: 1;
-      overflow-y: auto;
-      margin-bottom: 20px;
-    }
-    .sidebar .history h4 {
-      color: #b6b7c2;
-      margin: 20px 0 8px 4px;
-      font-size: 1.02rem;
-      font-weight: 500;
-    }
-    .sidebar .history ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .sidebar .history li {
-      color: #ececf1;
-      opacity: 0.87;
-      margin-bottom: 8px;
-      padding-left: 8px;
-      font-size: 0.97rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .sidebar .footer {
-      font-size: 0.9rem;
-      color: #777;
-      text-align: center;
-      width: 100%;
-      margin-bottom: 12px;
-    }
     .main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      height: 100vh;
       background: #202123;
       min-width: 0;
+      height: 100vh;
     }
     .logo-bar {
       display: flex;
@@ -103,57 +45,53 @@
       align-items: center;
       background: #23242b;
       border-bottom: 1px solid #26272e;
-      height: 70px;
-      min-height: 42px;
-      padding: 0;
+      height: 56px;
+      min-height: 36px;
     }
-    .logo-bar a {
+    .logo-bar a, .logo-bar img {
       display: flex;
       justify-content: center;
       align-items: center;
+      max-width: 96vw;
       width: 100%;
       height: 100%;
     }
     .logo-bar img {
-      max-height: 64px;
-      max-width: 88vw;
+      max-height: 48px;
       width: auto;
       object-fit: contain;
-      background: none;
-      border-radius: 7px;
+      border-radius: 6px;
       cursor: pointer;
-      margin: 1px 0;
-      display: block;
-      box-shadow: 0 2px 12px #21222240;
-      transition: box-shadow .18s, opacity .14s;
+      box-shadow: 0 2px 10px #21222236;
+      background: none;
+      margin: 2px 0;
+      transition: box-shadow .18s, opacity .13s;
     }
     .logo-bar img:hover {
-      box-shadow: 0 4px 18px #2042c630;
+      box-shadow: 0 4px 14px #2042c630;
       opacity: 0.93;
     }
     .chat-box {
       flex: 1 1 auto;
       overflow-y: auto;
-      padding: 34px 34px 14px 34px;
+      padding: 12px 12px 12px 12px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 14px;
       background: #202123;
-      transition: background 0.3s;
       min-height: 0;
       max-height: 100vh;
     }
     .message {
-      max-width: 85%;
-      padding: 18px 24px;
-      border-radius: 17px;
-      font-size: 1.08rem;
+      max-width: 90vw;
+      padding: 16px 18px;
+      border-radius: 13px;
+      font-size: 1.07rem;
       white-space: pre-wrap;
       word-wrap: break-word;
-      box-shadow: 0 1px 3px rgba(0,0,0,.11);
-      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,.07);
       opacity: 0;
-      animation: fadeIn 0.23s forwards;
+      animation: fadeIn 0.21s forwards;
     }
     .message.user {
       align-self: flex-end;
@@ -168,98 +106,99 @@
     .timestamp {
       font-size: 10px;
       color: #8a8a8a;
-      margin-top: 8px;
+      margin-top: 7px;
       text-align: right;
       user-select: none;
     }
     .quick-buttons {
       width: 100%;
       display: flex;
-      gap: 16px;
-      padding: 0 34px 10px 34px;
-      margin-top: 4px;
+      gap: 10px;
+      padding: 0 12px 4px 12px;
+      margin-top: 0px;
     }
     .quick-buttons button {
       flex: 1 1 45%;
-      padding: 14px 0;
+      padding: 12px 0;
       background: #343541;
       border: none;
-      border-radius: 16px;
+      border-radius: 13px;
       color: #ececf1;
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
       outline: none;
-      box-shadow: 0 2px 24px rgba(51,53,65,.04);
-      transition: background .2s, box-shadow .2s;
+      box-shadow: 0 2px 14px rgba(51,53,65,.03);
+      transition: background .16s, box-shadow .11s;
     }
     .quick-buttons button:hover {
       background: #2d6cff;
       color: #fff;
-      box-shadow: 0 4px 24px #2d6cff44;
     }
     .input-area {
       display: flex;
       background: #23242b;
-      padding: 16px 34px;
+      padding: 10px 12px;
       border-top: 1px solid #26272e;
     }
     #user-input {
       flex-grow: 1;
-      font-size: 1.1rem;
-      padding: 14px 18px;
+      font-size: 1rem;
+      padding: 10px 16px;
       border: none;
-      border-radius: 16px;
+      border-radius: 13px;
       outline: none;
       background: #18191c;
       color: #ececf1;
-      transition: box-shadow 0.32s;
-      margin-right: 18px;
+      transition: box-shadow 0.24s;
+      margin-right: 12px;
     }
     #user-input:focus {
-      box-shadow: 0 0 9px #547fff66;
+      box-shadow: 0 0 8px #547fff66;
     }
     #user-input::placeholder {
       color: #9698ac;
     }
     #send-button {
-      border-radius: 16px;
+      border-radius: 13px;
       border: none;
       background: linear-gradient(90deg,#3779ff,#77aaff);
       color: #fff;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1.02rem;
       cursor: pointer;
-      padding: 0 30px;
-      transition: background 0.18s;
-      min-height: 48px;
-      min-width: 92px;
-      box-shadow: 0 0 12px #618cff45;
-      letter-spacing: .02em;
+      padding: 0 22px;
+      transition: background 0.17s;
+      min-height: 39px;
+      min-width: 65px;
+      box-shadow: 0 0 8px #618cff19;
+      letter-spacing: .01em;
     }
     #send-button:hover {
       background: linear-gradient(90deg,#2355a4,#338cff);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    @media (max-width: 950px) {
-      .sidebar { display: none !important; }
-      .main { margin-left: 0; }
-      .logo-bar img { max-width: 95vw; }
-      .chat-box, .input-area, .quick-buttons { padding-left: 8px; padding-right: 8px; }
+    /* Hide sidebar on small screens */
+    @media (max-width: 1000px) {
+      .sidebar {
+        display: none !important;
+      }
+      .main {
+        width: 100vw !important;
+        height: 100vh !important;
+        min-width: 0 !important;
+        max-width: none !important;
+      }
     }
     @media (max-width: 600px) {
-      .sidebar { display: none !important; }
-      .logo-bar { height:38px; min-height:22px; }
-      .logo-bar img { max-width:98vw; max-height:35px;}
-      .chat-box { padding: 6px 2vw 5px 2vw; }
-      .quick-buttons { gap: 6px; padding: 0 2vw 4px 2vw; }
-      .input-area { padding: 6px 2vw; }
-      #user-input, #send-button { font-size: 1rem; padding: 8px 5px; min-height: 28px; }
-      #send-button { min-width: 52px; }
+      .logo-bar { height:32px; min-height:20px; }
+      .logo-bar img { max-height:30px; }
+      .chat-box { padding: 6px 1vw 5px 1vw; gap:11px;}
+      .quick-buttons { gap: 5px; padding: 0 1vw 2px 1vw; }
+      .input-area { padding: 5px 1vw; }
+      #user-input, #send-button { font-size: .98rem; padding: 7px 4px; min-height: 24px; }
+      #send-button { min-width: 41px; }
     }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
   </style>
 </head>
 <body>
@@ -282,7 +221,7 @@
   <div class="main">
     <div class="logo-bar">
       <a href="https://www.viet.edu.in/" target="_blank" tabindex="0" aria-label="VIET Homepage">
-        <img src="https://www.viet.edu.in/img/footer-imgs/viet-logo.png" />
+        <img src="https://cipher.tagoreeducons.com/uploaded_images/91378Visakha%20Institute%20Of%20Engineering%20&%20Technology.jpg" alt="VIET Banner" />
       </a>
     </div>
     <div id="chat-box" class="chat-box"></div>
