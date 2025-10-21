@@ -34,7 +34,7 @@ app.post('/chat', async (req, res) => {
       reply = "Our Placement Cell works with companies like TCS, Infosys, Wipro.";
     } else {
       // Example of external API call with SerpAPI - replace your API key below
-      const SERPAPIKEY = "your_serp_api_key_here"; 
+      const SERPAPIKEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d"; 
       const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&apikey=${SERPAPIKEY}`;
       const response = await fetch(url);
       const data = await response.json();
@@ -60,3 +60,4 @@ app.post('/chat', async (req, res) => {
 app.listen(5000, () => {
   console.log("Backend running on http://localhost:5000");
 });
+
