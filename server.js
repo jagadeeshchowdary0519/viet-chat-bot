@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(demo.html(__dirname));
 
 
 const SERPAPI_KEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d";
@@ -52,5 +52,6 @@ app.post("/chat", async (req, res) => {
 });
 
 app.listen(5000, () => console.log("✅ Backend running on http://localhost:5000"));
+
 
 
