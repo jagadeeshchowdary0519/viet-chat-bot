@@ -1,12 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(__dirname));  // Serve static files in project folder
 
 const SERPAPI_KEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d";
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "demo.html"));  // Serve demo.html on root url
+});
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
