@@ -2,256 +2,382 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>VIET AI Chatbot</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #202123;
+      color: #ececf1;
+      font-family: 'Segoe UI', 'Inter', Tahoma, Verdana, Geneva, sans-serif;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
       height: 100vh;
+      width: 100vw;
+    }
+    .sidebar {
+      width: 280px;
+      background: #26272e;
+      border-right: 1px solid #23242b;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 28px 12px 0 16px;
+      min-width: 170px;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+    .sidebar h2 {
+      color: #ffffff;
+      font-size: 1.5rem;
+      margin: 0 0 16px;
+      letter-spacing: 1px;
+    }
+    .sidebar .newchat-btn {
+      display: flex;
+      align-items: center;
+      background: #343541;
+      border: none;
+      color: #ececf1;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      gap: 8px;
+      font-size: 1rem;
+      transition: background .18s;
+    }
+    .sidebar .newchat-btn:hover {
+      background: #3f4049;
+    }
+    .sidebar .history {
+      width: 100%;
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    .sidebar .history h4 {
+      color: #b6b7c2;
+      margin: 20px 0 8px 4px;
+      font-size: 1.02rem;
+      font-weight: 500;
+    }
+    .sidebar .history ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar .history li {
+      color: #ececf1;
+      opacity: 0.87;
+      margin-bottom: 8px;
+      padding-left: 8px;
+      font-size: 0.97rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sidebar .footer {
+      font-size: 0.9rem;
+      color: #777;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #202123;
+    }
+    .logo-bar {
       display: flex;
       justify-content: center;
       align-items: center;
-      background: url("https://viet.edu.in/wp-content/uploads/2022/04/college-campus.jpg") no-repeat center center/cover;
+      height: 100px;
+      background: #23242b;
+      border-bottom: 1px solid #26272e;
     }
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-    }
-    .chat-container {
-      position: relative;
-      width: 95%;
-      max-width: 450px;
-      height: 90%;
-      background: #fff;
-      border-radius: 16px;
+    .logo-bar a {
       display: flex;
-      flex-direction: column;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      overflow: hidden;
-      z-index: 1;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
     }
-    .header {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 12px;
-      font-size: 18px;
-      font-weight: bold;
+    .logo-bar img {
+      max-height: 94px;
+      max-width: 98vw;
+      width: auto;
+      object-fit: contain;
+      background: none;
+      box-shadow: 0 2px 12px #21222240;
+      border-radius: 7px;
+      cursor: pointer;
+      margin: 2px 0;
+      display: block;
+      transition: box-shadow .18s, opacity .15s;
+    }
+    .logo-bar img:hover {
+      box-shadow: 0 4px 22px #2042c630;
+      opacity: 0.86;
     }
     .chat-box {
       flex: 1;
-      padding: 12px;
       overflow-y: auto;
+      padding: 38px 38px 18px 38px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      background: #f9f9f9;
+      gap: 18px;
+      background: #202123;
+      transition: background 0.3s;
+      min-height: 0;
     }
-    .chat-message {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.4;
-      word-wrap: break-word;
+    .message {
+      max-width: 85%;
+      padding: 18px 24px;
+      border-radius: 17px;
+      font-size: 1.08rem;
       white-space: pre-wrap;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      word-wrap: break-word;
+      box-shadow: 0 1px 3px rgba(0,0,0,.11);
       position: relative;
+      opacity: 0;
+      animation: fadeIn 0.23s forwards;
     }
-    .chat-message.bot {
-      align-self: flex-start;
-      background: #eaeaea;
-    }
-    .chat-message.user {
+    .message.user {
       align-self: flex-end;
-      background: #007bff;
-      color: white;
+      background: linear-gradient(90deg,#3779ff,#77aaff);
+      color: #fff;
+      font-weight: 600;
+    }
+    .message.bot {
+      align-self: flex-start;
+      background: #26272e;
     }
     .timestamp {
       font-size: 10px;
-      color: #555;
-      margin-top: 4px;
+      color: #8a8a8a;
+      margin-top: 8px;
       text-align: right;
+      user-select: none;
     }
-    .input-container {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #ccc;
-      background: white;
-    }
-    input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-    }
-    button {
-      margin-left: 8px;
-      padding: 12px 18px;
-      background: #007bff;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover { background: #0056b3; }
     .quick-buttons {
+      width: 100%;
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 8px;
-      border-top: 1px solid #eee;
-      background: #fafafa;
+      gap: 16px;
+      padding: 0 38px 10px 38px;
+      margin-top: 12px;
     }
     .quick-buttons button {
-      flex: 1 1 auto;
-      padding: 8px;
-      background: #f1f1f1;
+      flex: 1 1 45%;
+      padding: 14px 0;
+      background: #343541;
       border: none;
-      border-radius: 6px;
+      border-radius: 16px;
+      color: #ececf1;
+      font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
-      font-size: 12px;
+      outline: none;
+      box-shadow: 0 2px 24px rgba(51,53,65,.04);
+      transition: background .2s, box-shadow .2s;
     }
     .quick-buttons button:hover {
-      background: #ddd;
+      background: #2d6cff;
+      color: #fff;
+      box-shadow: 0 4px 24px #2d6cff44;
     }
-    .typing {
-      font-size: 13px;
-      color: #666;
-      font-style: italic;
-      margin-left: 6px;
+    .input-area {
+      display: flex;
+      background: #23242b;
+      padding: 20px 38px;
+      border-top: 1px solid #26272e;
     }
-    .show-more {
-      color: blue;
+    #user-input {
+      flex-grow: 1;
+      font-size: 1.1rem;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 16px;
+      outline: none;
+      background: #18191c;
+      color: #ececf1;
+      transition: box-shadow 0.32s;
+      margin-right: 18px;
+    }
+    #user-input:focus {
+      box-shadow: 0 0 9px #547fff66;
+    }
+    #user-input::placeholder {
+      color: #9698ac;
+    }
+    #send-button {
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(90deg,#3779ff,#77aaff);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.15rem;
       cursor: pointer;
-      font-size: 12px;
-      display: inline-block;
-      margin-top: 5px;
+      padding: 0 30px;
+      transition: background 0.18s;
+      min-height: 48px;
+      min-width: 92px;
+      box-shadow: 0 0 12px #618cff45;
+      letter-spacing: .02em;
+    }
+    #send-button:hover {
+      background: linear-gradient(90deg,#2355a4,#338cff);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 950px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .logo-bar img { max-width: 85vw; }
+      .chat-box, .input-area, .quick-buttons { padding-left: 14px; padding-right: 14px; }
+    }
+    @media (max-width: 600px) {
+      .logo-bar { height: 62px; }
+      .logo-bar img { max-width: 96vw; height:49px;}
+      .chat-box { padding: 10px 5vw; }
+      .quick-buttons { gap: 7px; padding: 0 5vw 8px 5vw; }
+      .input-area { padding: 12px 5vw; }
+      #user-input, #send-button { font-size: 1rem; padding: 11px 11px; min-height: 38px; }
+      #send-button { min-width: 70px; }
     }
   </style>
 </head>
 <body>
-  <div class="overlay"></div>
-  <div class="chat-container">
-    <div class="header">🤖 VIET AI Chatbot</div>
-    <div class="chat-box" id="chat-box"></div>
-
+  <div class="sidebar">
+    <h2>VIET AI</h2>
+    <button class="newchat-btn" onclick="window.location.reload()">
+      <span>＋</span> New chat
+    </button>
+    <nav class="history">
+      <h4>Recent</h4>
+      <ul>
+        <li>Admissions eligibility?</li>
+        <li>Placement statistics</li>
+        <li>Hostel fees?</li>
+        <li>Faculty info</li>
+      </ul>
+    </nav>
+    <div class="footer">Powered by VIET AI</div>
+  </div>
+  <div class="main">
+    <div class="logo-bar">
+      <a href="https://www.viet.edu.in/" target="_blank">
+        <img src="https://www.viet.edu.in/img/footer-imgs/viet-logo.png" />
+      </a>
+    </div>
+    <div id="chat-box" class="chat-box"></div>
     <div class="quick-buttons">
       <button onclick="sendQuick('Admissions at VIET')">Admissions</button>
       <button onclick="sendQuick('Placements in VIET')">Placements</button>
-
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Type your question..." />
-      <button onclick="sendMessage()">Send</button>
     </div>
+    <form class="input-area" onsubmit="event.preventDefault(); sendMessage();">
+      <input id="user-input" type="text" placeholder="Type your question..." autocomplete="off" />
+      <button id="send-button" type="submit">Send</button>
+    </form>
   </div>
-
   <script>
-    const backendURL = "https://viet-chat-bot-1.onrender.com"; // your deployed backend URL
-
+    const backendURL = "https://viet-chat-bot-1.onrender.com";
     function getTimestamp() {
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
-
     function addMessage(text, sender) {
       const chatBox = document.getElementById("chat-box");
       const messageDiv = document.createElement("div");
-      messageDiv.className = "chat-message " + sender;
-
+      messageDiv.className = "message " + sender;
       let displayText = text;
       let needsToggle = false;
-
-      if (text.length > 150) {
-        displayText = text.substring(0, 150) + "...";
+      if(text.length > 200){
+        displayText = text.substring(0,200) + "...";
         needsToggle = true;
       }
-
       const span = document.createElement("span");
       span.innerText = displayText;
       messageDiv.appendChild(span);
-
-      if (needsToggle) {
+      if(needsToggle){
         const toggle = document.createElement("div");
         toggle.className = "show-more";
         toggle.innerText = "Show more";
+        toggle.style.color = "#7aa0ff";
+        toggle.style.cursor = "pointer";
+        toggle.style.fontSize = "0.92rem";
+        toggle.style.marginTop = "6px";
         toggle.onclick = () => {
-          if (span.innerText.endsWith("...")) {
+          if(span.innerText.endsWith("...")){
             span.innerText = text;
             toggle.innerText = "Show less";
           } else {
-            span.innerText = text.substring(0, 150) + "...";
+            span.innerText = text.substring(0,200) + "...";
             toggle.innerText = "Show more";
           }
         };
         messageDiv.appendChild(toggle);
       }
-
       const time = document.createElement("div");
       time.className = "timestamp";
       time.innerText = getTimestamp();
       messageDiv.appendChild(time);
-
       chatBox.appendChild(messageDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-
     function showTyping() {
       const chatBox = document.getElementById("chat-box");
       const typingDiv = document.createElement("div");
-      typingDiv.className = "chat-message bot";
+      typingDiv.className = "message bot";
       typingDiv.id = "typing";
       typingDiv.innerHTML = "<span class='typing'>Bot is typing...</span>";
       chatBox.appendChild(typingDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-
-    function removeTyping() {
+    function removeTyping(){
       const typingDiv = document.getElementById("typing");
-      if (typingDiv) typingDiv.remove();
+      if(typingDiv) typingDiv.remove();
     }
-
     async function sendMessage() {
       const input = document.getElementById("user-input");
       const text = input.value.trim();
-      if (!text) return;
-
+      if(!text) return;
       addMessage(text, "user");
       input.value = "";
-
       showTyping();
-
-      try {
-        let res = await fetch(`${backendURL}/chat`, {
+      try{
+        const res = await fetch(`${backendURL}/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message: text }),
         });
-        let data = await res.json();
+        const data = await res.json();
         removeTyping();
         addMessage(data.reply, "bot");
-      } catch (e) {
+      } catch(err){
         removeTyping();
         addMessage("⚠️ Server error. Please check backend.", "bot");
       }
     }
-
-    function sendQuick(text) {
+    function sendQuick(text){
       document.getElementById("user-input").value = text;
       sendMessage();
     }
-
-    document.getElementById("user-input").addEventListener("keypress", function(e) {
-      if (e.key === "Enter") sendMessage();
+    document.getElementById("user-input").addEventListener("keypress", (e) => {
+      if(e.key === "Enter") sendMessage();
     });
-
     window.onload = () => {
       addMessage("Hello 👋 I am VIET AI Chatbot. Ask me anything!", "bot");
     };
   </script>
 </body>
 </html>
-
