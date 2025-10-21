@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fetch = require("node-fetch");  // Import node-fetch for fetch support in Node.js
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,9 +13,9 @@ app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
   let reply = "";
 
-  if (userMessage.toLowerCase().includes("admission")) {
+  if (userMessage && userMessage.toLowerCase().includes("admission")) {
     reply = "Admissions at VIET are through AP EAMCET/ECET. Visit viet.ac.in for details.";
-  } else if (userMessage.toLowerCase().includes("placements")) {
+  } else if (userMessage && userMessage.toLowerCase().includes("placements")) {
     reply = "Our Placement Cell works with companies like TCS, Infosys, Wipro.";
   } else {
     try {
