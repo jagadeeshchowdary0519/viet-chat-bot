@@ -6,20 +6,23 @@ const path = require("path");
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static(__dirname));  // Serve static assets
 
-const SERPAPI_KEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d";
-
+// Serve demo.html at root
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "demo.html"));
 });
 
+// Serve index.html at /index
+app.get("/index", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// Chat API route
 app.post("/chat", async (req, res) => {
   try {
-    // Log the full incoming request body for debugging
     console.log("Incoming body:", req.body);
-
-    // Accept both { message: "..." } and raw string payloads
+    
     let userMessage = req.body?.message || req.body;
     if (typeof userMessage !== "string") userMessage = "";
 
@@ -34,31 +37,26 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Our Placement Cell works with companies like TCS, Infosys, Wipro." });
     }
 
-    // External API fallback for other queries
-    try {
-      const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&api_key=${SERPAPI_KEY}`;
-      const response = await fetch(url);
-      const data = await response.json();
+    const SERPAPI_KEY = "f94cf102ec702243fdecd43858183b0f0626f71cc19ed22915223a40d617ec1d";
+    const url = `https://serpapi.com/search.json?q=${encodeURIComponent(userMessage)}&api_key=${SERPAPI_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-      if (data.answer_box && data.answer_box.answer) {
-        return res.json({ reply: data.answer_box.answer });
-      } else if (data.organic_results && data.organic_results.length > 0) {
-        return res.json({ reply: data.organic_results[0].snippet });
-      } else if (data.error) {
-        return res.json({ reply: "⚠️ SerpAPI Error: " + data.error });
+    if (data.answer_box && data.answer_box.answer) {
+      return res.json({ reply: data.answer_box.answer });
+    } else if (data.organic_results && data.organic_results.length > 0) {
+      return res.json({ reply: data.organic_results[0].snippet });
+    } else if (data.error) {
+      return res.json({ reply: "⚠️ SerpAPI Error: " + data.error });
+    } else {
+      const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(userMessage)}`;
+      const wikiRes = await fetch(wikiUrl);
+      const wikiData = await wikiRes.json();
+      if (wikiData.extract) {
+        return res.json({ reply: wikiData.extract });
       } else {
-        const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(userMessage)}`;
-        const wikiRes = await fetch(wikiUrl);
-        const wikiData = await wikiRes.json();
-        if (wikiData.extract) {
-          return res.json({ reply: wikiData.extract });
-        } else {
-          return res.json({ reply: "I couldn't find an answer. Please try again!" });
-        }
+        return res.json({ reply: "I couldn't find an answer. Please try again!" });
       }
-    } catch (err) {
-      console.error("❌ Fetch error:", err);
-      return res.json({ reply: "⚠️ External search error." });
     }
   } catch (err) {
     console.error("❌ Chat error:", err);
